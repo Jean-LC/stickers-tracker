@@ -3,6 +3,8 @@ import useSWR from "swr";
 import type { IStickersData } from "../../interfaces/stickersData";
 import { axiosFetcher } from "../../services/config";
 import { TrackerStore } from "../../store/Store";
+import hecuba from "../../assets/HECUBA.png";
+import jeremy from "../../assets/JEREMY.png";
 
 const GridView = () => {
   const { isExternalAlbum, albumExternalData } = TrackerStore();
@@ -23,9 +25,7 @@ const GridView = () => {
                   w={40}
                   h={60}
                   fit="contain"
-                  src={
-                    Number(val.name) % 2 === 0 ? "/HECUBA.png" : "/JEREMY.png"
-                  }
+                  src={Number(val.name) % 2 === 0 ? hecuba : jeremy}
                 />
               ) : (
                 <Text ta={"center"} c={"primaryBlue"} fz={30}>
@@ -45,9 +45,7 @@ const GridView = () => {
                     w={40}
                     h={60}
                     fit="contain"
-                    src={
-                      Number(val.name) % 2 === 0 ? "/HECUBA.png" : "/JEREMY.png"
-                    }
+                    src={Number(val.name) % 2 === 0 ? hecuba : jeremy}
                   />
                 ) : (
                   <Text ta={"center"} c={"primaryBlue"} fz={30}>

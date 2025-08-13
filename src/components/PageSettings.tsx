@@ -2,11 +2,13 @@ import { Group, Flex, Text, Image, Button } from "@mantine/core";
 import { TrackerStore } from "../store/Store";
 import SearchStickers from "./dataSettings.tsx/SearchStickers";
 import AddStickers from "./dataSettings.tsx/AddStickers";
+import listIcon from "../assets/list-view.png";
+import gridIcon from "../assets/grid-view.png";
 
 const PageSettings = () => {
   const { selectedView, setSelectedView, isExternalAlbum } = TrackerStore();
 
-  const buttonThemeView = (view: "grid" | "list") => {
+  const buttonThemeView = (view: "grid" | "list", icon: string) => {
     const isViewActive = view === selectedView;
     return (
       <Button
@@ -14,7 +16,7 @@ const PageSettings = () => {
         color={isViewActive ? "secondaryOrange" : "primaryBlue"}
         onClick={() => setSelectedView(view)}
       >
-        <Image src={`/${view}-view.png`} />
+        <Image src={icon} />
       </Button>
     );
   };
@@ -29,8 +31,8 @@ const PageSettings = () => {
     >
       <Group>
         <Text>Vista</Text>
-        {buttonThemeView("list")}
-        {buttonThemeView("grid")}
+        {buttonThemeView("list", listIcon)}
+        {buttonThemeView("grid", gridIcon)}
       </Group>
       <SearchStickers />
       {/* <Group>

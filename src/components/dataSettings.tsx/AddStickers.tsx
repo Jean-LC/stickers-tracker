@@ -2,6 +2,7 @@ import { Group } from "@mantine/core";
 import CustomInputButton from "../UI/CustomInputButton";
 import { TrackerStore } from "../../store/Store";
 import { useState } from "react";
+import addIcon from "../../assets/add-icon.png";
 
 const AddStickers = () => {
   const { setAlbumExternalData, albumExternalData } = TrackerStore();
@@ -20,9 +21,9 @@ const AddStickers = () => {
   return (
     <Group>
       <CustomInputButton
-      value={addStickerName}
+        value={addStickerName}
         name={"Agregar"}
-        iconSource={"/add-icon.png"}
+        iconSource={addIcon}
         handleChange={setAddStickerName}
         handleClick={handleAddSticker}
       />
