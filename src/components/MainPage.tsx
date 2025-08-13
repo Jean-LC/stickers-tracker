@@ -25,11 +25,6 @@ const MainPage = () => {
       direction={"column"}
       style={{ borderRadius: 0 }}
     >
-      <ModalStart
-        openModal={openStartModal}
-        closeModal={close}
-        setAlbumName={setAlbumName}
-      />
       <Flex
         bg={"primaryOrange"}
         w={"90%"}
@@ -65,6 +60,13 @@ const MainPage = () => {
         </Flex>
       </Flex>
       <StickersDetail />
+      {!albumName && (
+        <ModalStart
+          openModal={openStartModal}
+          closeModal={close}
+          setAlbumName={setAlbumName}
+        />
+      )}
     </Flex>
   );
 };
