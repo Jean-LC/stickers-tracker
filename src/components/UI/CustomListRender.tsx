@@ -1,7 +1,7 @@
 import { Group, Select, Text } from "@mantine/core";
 import type { IStickersData } from "../../interfaces/stickersData";
-import { axiosCustom } from "../../services/config";
 import { TrackerStore } from "../../store/Store";
+import { supabase } from "../../supabase/supabaseClient";
 const stickersValue = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
 interface Props {
@@ -14,9 +14,11 @@ const CustomListRender = ({ data }: Props) => {
 
   async function handleUpdateSticker(sticker: IStickersData, count: number) {
     try {
-      const { data } = await axiosCustom.put(`/bluey2025/${sticker.id}`, {
-        count,
-      });
+      const { data } = await supabase
+        .from("album")
+        .update({ count })
+        .eq("id", sticker.id)
+        .select();
       console.log(data);
     } catch {
       console.log("error");

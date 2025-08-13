@@ -1,14 +1,13 @@
-import axios from "axios";
-
-export const axiosCustom = axios.create({
-  baseURL: "https://689b668458a27b18087b319f.mockapi.io/pipos/data",
-});
+import { supabase } from "../supabase/supabaseClient";
 
 export async function axiosFetcher(url: string | null) {
   try {
     if (!url) return;
-    const response = await axiosCustom.get(url);
-    return response.data;
+    const { data, error } = await supabase.from("album").select("*");
+
+    if (error || !data) return;
+
+    return data;
   } catch (e) {
     console.log(e);
   }

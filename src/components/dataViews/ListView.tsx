@@ -29,10 +29,14 @@ const ListView = () => {
 
     if (searchSticker.length > 0)
       return setSelectedData(
-        trackerData.filter((data) => data.name.includes(searchSticker))
+        trackerData
+          .filter((data) => data.name.includes(searchSticker))
+          .sort((a, b) => (Number(a.id) > Number(b.id) ? 1 : -1))
       );
 
-    return setSelectedData(trackerData);
+    return setSelectedData(
+      trackerData.sort((a, b) => (Number(a.id) > Number(b.id) ? 1 : -1))
+    );
   }
   function UpdateExternalData() {
     if (searchSticker.length > 0)
