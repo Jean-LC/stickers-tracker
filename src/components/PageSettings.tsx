@@ -1,9 +1,10 @@
 import { Group, Flex, Text, Image, Button } from "@mantine/core";
 import { TrackerStore } from "../store/Store";
 import SearchStickers from "./dataSettings.tsx/SearchStickers";
+import AddStickers from "./dataSettings.tsx/AddStickers";
 
 const PageSettings = () => {
-  const { selectedView, setSelectedView } = TrackerStore();
+  const { selectedView, setSelectedView, isExternalAlbum } = TrackerStore();
 
   const buttonThemeView = (view: "grid" | "list") => {
     const isViewActive = view === selectedView;
@@ -42,6 +43,7 @@ const PageSettings = () => {
           onChange={(e) => setListOrder(e)}
         />
       </Group> */}
+      {isExternalAlbum && <AddStickers />}
 
       {/* <Group>{inputButton("Agregar", "/add-icon.png")}</Group> */}
     </Flex>

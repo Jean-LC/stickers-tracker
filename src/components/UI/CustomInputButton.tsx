@@ -1,14 +1,16 @@
 import { Group, TextInput, Image } from "@mantine/core";
 
 interface Props {
+  value: string;
   name: string;
   iconSource: string;
   handleChange: (value: string) => void;
-  handleClick?: () => void ;
+  handleClick?: () => void;
 }
 
 const CustomInputButton = ({
   name,
+  value,
   iconSource,
   handleChange,
   handleClick,
@@ -19,8 +21,13 @@ const CustomInputButton = ({
         placeholder={name}
         h={"50%"}
         onChange={(e) => handleChange(e.target.value)}
+        value={value}
       />
-      <Image src={iconSource} onClick={handleClick} style={{cursor: !handleClick ? "" : "pointer"}}/>
+      <Image
+        src={iconSource}
+        onClick={handleClick}
+        style={{ cursor: !handleClick ? "" : "pointer" }}
+      />
     </Group>
   );
 };

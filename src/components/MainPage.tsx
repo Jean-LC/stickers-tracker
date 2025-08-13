@@ -2,8 +2,16 @@ import { Flex, Title } from "@mantine/core";
 import PageSettings from "./PageSettings";
 import PageStats from "./PageStats";
 import StickersDetail from "./StickersDetail";
+import ModalStart from "./UI/ModalStart";
+import { useDisclosure } from "@mantine/hooks";
+import { TrackerStore } from "../store/Store";
+import { useState } from "react";
 
 const MainPage = () => {
+  const { isExternalAlbum } = TrackerStore();
+  const [albumName, setAlbumName] = useState("");
+  const [openStartModal, { close }] = useDisclosure(true);
+
   return (
     <Flex
       w={"100vw"}
@@ -17,6 +25,11 @@ const MainPage = () => {
       direction={"column"}
       style={{ borderRadius: 0 }}
     >
+      <ModalStart
+        openModal={openStartModal}
+        closeModal={close}
+        setAlbumName={setAlbumName}
+      />
       <Flex
         bg={"primaryOrange"}
         w={"90%"}
@@ -35,13 +48,15 @@ const MainPage = () => {
           style={{ alignSelf: "flex-start" }}
           fz={{ base: 25, sm: 35 }}
         >
-          El episodio de hoy se llama: Album de estampas
+          {isExternalAlbum
+            ? albumName
+            : "  El episodio de hoy se llama: Album de estampas"}
         </Title>
         <Flex
           gap={20}
           mt={20}
           w={"100%"}
-          h={'100%'}
+          h={"100%"}
           direction={{ base: "column", sm: "row" }}
           align={"center"}
         >

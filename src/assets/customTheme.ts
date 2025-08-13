@@ -59,5 +59,16 @@ export const customTheme = createTheme({
         },
       },
     },
+    Modal: {
+      defaultProps:{
+        bg: 'primaryOrange',
+      },
+      styles: {
+        content: {
+          background: "#85A9CD",
+        },
+        
+      }
+    }
   },
 });

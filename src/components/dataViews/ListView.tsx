@@ -7,13 +7,13 @@ import { axiosFetcher } from "../../services/config";
 import useSWR from "swr";
 
 const ListView = () => {
+  const { searchSticker, isExternalAlbum, albumExternalData } = TrackerStore();
   const {
     data: trackerData,
     // @ts-ignore
-  } = useSWR<IStickersData[]>("/bluey2025", axiosFetcher, {
-    refreshInterval: 1000,
+  } = useSWR<IStickersData[]>(!isExternalAlbum && "/bluey2025", axiosFetcher, {
+    ...(!isExternalAlbum && { refreshInterval: 1000 }),
   });
-  const { searchSticker } = TrackerStore();
   const [selectedData, setSelectedData] = useState<IStickersData[]>([]);
   const [halfLeftData, setHalfLeftData] = useState<any[]>([]);
   const [halfRightData, setHalfRightData] = useState<any[]>([]);
@@ -24,7 +24,7 @@ const ListView = () => {
     setHalfRightData(selectedData.slice(halfValueData));
   }, [selectedData]);
 
-  useEffect(() => {
+  function UpdateTrackerData() {
     if (!trackerData) return;
 
     if (searchSticker.length > 0)
@@ -33,7 +33,19 @@ const ListView = () => {
       );
 
     return setSelectedData(trackerData);
-  }, [searchSticker, trackerData]);
+  }
+  function UpdateExternalData() {
+    if (searchSticker.length > 0)
+      return setSelectedData(
+        albumExternalData.filter((data) => data.name.includes(searchSticker))
+      );
+
+    return setSelectedData(albumExternalData);
+  }
+
+  useEffect(() => {
+    isExternalAlbum ? UpdateExternalData() : UpdateTrackerData();
+  }, [searchSticker, trackerData, albumExternalData]);
 
   return (
     <>

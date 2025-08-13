@@ -3,12 +3,15 @@ import { DonutChart } from "@mantine/charts";
 import useSWR from "swr";
 import type { IStickersData } from "../interfaces/stickersData";
 import { axiosFetcher } from "../services/config";
+import { TrackerStore } from "../store/Store";
 
 const PageStats = () => {
-  const {
-    data: trackerData,
+  const { isExternalAlbum, albumExternalData } = TrackerStore();
+  const { data: trackerData } = useSWR<IStickersData[]>(
+    !isExternalAlbum && "/bluey2025",
     // @ts-ignore
-  } = useSWR<IStickersData[]>("/bluey2025", axiosFetcher);
+    axiosFetcher
+  );
 
   function getTrackerStats() {
     if (!trackerData) return [];
@@ -32,13 +35,39 @@ const PageStats = () => {
     ];
   }
 
+  function getTrackerStatsExternal() {
+    if (!albumExternalData) return [];
+
+    const collectedStickers =
+      albumExternalData.filter((value) => value.count > 0).length * 100;
+    const missingStickers =
+      albumExternalData.filter((value) => value.count === 0).length * 100;
+
+    return [
+      {
+        name: "Conseguidos",
+        value: collectedStickers / albumExternalData.length,
+        color: "primaryBlue",
+      },
+      {
+        name: "Faltantes",
+        value: missingStickers / albumExternalData.length,
+        color: "secondaryBlue",
+      },
+    ];
+  }
+
   return (
     <Flex direction={"column"} w={"50%"} align={"center"}>
       <Text mb={5} fz={20}>
         Progreso
       </Text>
       <Group w={"100%"}>
-        <DonutChart data={getTrackerStats()} size={100} thickness={35} />
+        <DonutChart
+          data={isExternalAlbum ? getTrackerStatsExternal() : getTrackerStats()}
+          size={100}
+          thickness={35}
+        />
         <Flex
           w={"100%"}
           justify={"center"}

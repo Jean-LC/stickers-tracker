@@ -5,14 +5,16 @@ interface IStates {
   selectedView: "grid" | "list";
   listOrder: string | null;
   searchSticker: string;
-  selectedData: IStickersData[];
+  albumExternalData: IStickersData[];
+  isExternalAlbum: boolean;
 }
 
 interface IActions {
   setSelectedView: (selectedView: "grid" | "list") => void;
   setListOrder: (listOrder: string | null) => void;
   setSearchSticker: (searchSticker: string) => void;
-  setSelectedData: (selectedData: IStickersData[]) => void;
+  setAlbumExternalData: (albumExternalData: IStickersData[]) => void;
+  setIsExternalAlbum: (isExternalAlbum: boolean) => void;
 }
 
 export const TrackerStore = create<IStates & IActions>((set) => ({
@@ -20,8 +22,11 @@ export const TrackerStore = create<IStates & IActions>((set) => ({
   setSelectedView: (selectedView: "grid" | "list") => set({ selectedView }),
   listOrder: "nombre",
   setListOrder: (listOrder: string | null) => set({ listOrder }),
-  selectedData: [],
-  setSelectedData: (selectedData: IStickersData[]) => set({ selectedData }),
+  albumExternalData: [],
+  setAlbumExternalData: (albumExternalData: IStickersData[]) =>
+    set({ albumExternalData }),
   searchSticker: "",
   setSearchSticker: (searchSticker: string) => set({ searchSticker }),
+  isExternalAlbum: true,
+  setIsExternalAlbum: (isExternalAlbum: boolean) => set({ isExternalAlbum }),
 }));

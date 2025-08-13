@@ -3,11 +3,12 @@ import CustomInputButton from "../UI/CustomInputButton";
 import { TrackerStore } from "../../store/Store";
 
 const SearchStickers = () => {
-  const { setSearchSticker } = TrackerStore();
+  const { setSearchSticker, searchSticker } = TrackerStore();
 
   return (
     <Group>
       <CustomInputButton
+        value={searchSticker}
         name={"Buscar"}
         iconSource={"/search-icon.png"}
         handleChange={setSearchSticker}
