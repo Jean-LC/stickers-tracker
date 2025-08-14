@@ -5,16 +5,17 @@ import { useState } from "react";
 import addIcon from "../../assets/add-icon.png";
 
 const AddStickers = () => {
-  const { setAlbumExternalData, albumExternalData } = TrackerStore();
+  const { setStickersData, stickersData } = TrackerStore();
   const [addStickerName, setAddStickerName] = useState("");
 
   function handleAddSticker() {
-    const stickerData = {
+    const newStickerData = {
       name: addStickerName,
       count: 0,
-      id: addStickerName + albumExternalData.length,
+      gotten: false,
+      id: addStickerName + stickersData.length,
     };
-    setAlbumExternalData([...albumExternalData, stickerData]);
+    setStickersData([...stickersData, newStickerData]);
     setAddStickerName("");
   }
 

@@ -1,57 +1,28 @@
 import { Flex, Group, Indicator, Text } from "@mantine/core";
 import { DonutChart } from "@mantine/charts";
-import useSWR from "swr";
-import type { IStickersData } from "../interfaces/stickersData";
-import { axiosFetcher } from "../services/config";
+
 import { TrackerStore } from "../store/Store";
 
 const PageStats = () => {
-  const { isExternalAlbum, albumExternalData } = TrackerStore();
-  const { data: trackerData } = useSWR<IStickersData[]>(
-    !isExternalAlbum && "/bluey2025",
-    // @ts-ignore
-    axiosFetcher
-  );
+  const { stickersData } = TrackerStore();
 
   function getTrackerStats() {
-    if (!trackerData) return [];
+    if (!stickersData) return [];
 
     const collectedStickers =
-      trackerData.filter((value) => value.count > 0).length * 100;
+      stickersData.filter((value) => value.count > 0).length * 100;
     const missingStickers =
-      trackerData.filter((value) => value.count === 0).length * 100;
+      stickersData.filter((value) => value.count === 0).length * 100;
 
     return [
       {
         name: "Conseguidos",
-        value: collectedStickers / trackerData.length,
+        value: collectedStickers / stickersData.length,
         color: "primaryBlue",
       },
       {
         name: "Faltantes",
-        value: missingStickers / trackerData.length,
-        color: "secondaryBlue",
-      },
-    ];
-  }
-
-  function getTrackerStatsExternal() {
-    if (!albumExternalData) return [];
-
-    const collectedStickers =
-      albumExternalData.filter((value) => value.count > 0).length * 100;
-    const missingStickers =
-      albumExternalData.filter((value) => value.count === 0).length * 100;
-
-    return [
-      {
-        name: "Conseguidos",
-        value: collectedStickers / albumExternalData.length,
-        color: "primaryBlue",
-      },
-      {
-        name: "Faltantes",
-        value: missingStickers / albumExternalData.length,
+        value: missingStickers / stickersData.length,
         color: "secondaryBlue",
       },
     ];
@@ -63,11 +34,7 @@ const PageStats = () => {
         Progreso
       </Text>
       <Group w={"100%"}>
-        <DonutChart
-          data={isExternalAlbum ? getTrackerStatsExternal() : getTrackerStats()}
-          size={100}
-          thickness={35}
-        />
+        <DonutChart data={getTrackerStats()} size={100} thickness={35} />
         <Flex
           w={"100%"}
           justify={"center"}

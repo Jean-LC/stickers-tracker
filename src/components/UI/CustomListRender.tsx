@@ -1,4 +1,4 @@
-import { Group, Select, Text } from "@mantine/core";
+import { Group, Select, Switch, Text } from "@mantine/core";
 import type { IStickersData } from "../../interfaces/stickersData";
 import { TrackerStore } from "../../store/Store";
 import { supabase } from "../../supabase/supabaseClient";
@@ -9,37 +9,77 @@ interface Props {
 }
 
 const CustomListRender = ({ data }: Props) => {
-  const { setAlbumExternalData, albumExternalData, isExternalAlbum } =
-    TrackerStore();
+  const { stickersData, setStickersData, isExternalAlbum } = TrackerStore();
 
   async function handleUpdateSticker(sticker: IStickersData, count: number) {
     try {
-      const { data } = await supabase
+      await supabase
         .from("album")
         .update({ count })
         .eq("id", sticker.id)
         .select();
-      console.log(data);
+
+      handleUpdateLocalStickerCount(sticker, count);
     } catch {
       console.log("error");
     }
   }
 
-  function handleUpdateExternalSticker(sticker: IStickersData, count: number) {
-    const updatedData = albumExternalData.map((data) =>
+  function handleUpdateLocalStickerCount(
+    sticker: IStickersData,
+    count: number
+  ) {
+    const updatedData = stickersData.map((data) =>
       data.id === sticker.id ? { ...data, count } : data
     );
-    setAlbumExternalData(updatedData);
+    setStickersData(updatedData);
+  }
+
+  function handleUpdateLocalStickerGotten(sticker: IStickersData) {
+    const updatedData = stickersData.map((data) =>
+      data.id === sticker.id ? { ...data, gotten: !data.gotten } : data
+    );
+    setStickersData(updatedData);
+  }
+
+  async function toggleGottenCondition(sticker: IStickersData) {
+    try {
+      const gotten = !sticker.gotten;
+      await supabase
+        .from("album")
+        .update({ gotten })
+        .eq("id", sticker.id)
+        .select();
+      handleUpdateLocalStickerGotten(sticker);
+    } catch {
+      console.log("error");
+    }
   }
 
   return data.map((val) => (
     <Group justify="space-evenly" key={val.id}>
+      <Text c={"primaryBlue"}>{val.name}</Text>
+      <Switch
+        checked={val.gotten}
+        onChange={() =>
+          isExternalAlbum
+            ? handleUpdateLocalStickerGotten
+            : toggleGottenCondition(val)
+        }
+        color="primaryBlue"
+        size="xl"
+        onLabel="Obtenido!"
+        offLabel="Aún no"
+        styles={{
+          track: { padding: 7 },
+        }}
+      />
       <Select
         value={val.count.toString()}
         data={stickersValue}
         onChange={(count) =>
           isExternalAlbum
-            ? handleUpdateExternalSticker(val, Number(count))
+            ? handleUpdateLocalStickerCount(val, Number(count))
             : handleUpdateSticker(val, Number(count))
         }
         w={70}
@@ -50,7 +90,6 @@ const CustomListRender = ({ data }: Props) => {
           },
         }}
       />
-      <Text c={"primaryBlue"}>{val.name}</Text>
     </Group>
   ));
 };

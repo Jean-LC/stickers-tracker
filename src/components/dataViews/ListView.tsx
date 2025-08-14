@@ -3,17 +3,10 @@ import { useEffect, useState } from "react";
 import type { IStickersData } from "../../interfaces/stickersData";
 import { TrackerStore } from "../../store/Store";
 import CustomListRender from "../UI/CustomListRender";
-import { axiosFetcher } from "../../services/config";
-import useSWR from "swr";
 
 const ListView = () => {
-  const { searchSticker, isExternalAlbum, albumExternalData } = TrackerStore();
-  const {
-    data: trackerData,
-    // @ts-ignore
-  } = useSWR<IStickersData[]>(!isExternalAlbum && "/bluey2025", axiosFetcher, {
-    ...(!isExternalAlbum && { refreshInterval: 1000 }),
-  });
+  const { searchSticker, isExternalAlbum, stickersData } = TrackerStore();
+
   const [selectedData, setSelectedData] = useState<IStickersData[]>([]);
   const [halfLeftData, setHalfLeftData] = useState<any[]>([]);
   const [halfRightData, setHalfRightData] = useState<any[]>([]);
@@ -25,52 +18,58 @@ const ListView = () => {
   }, [selectedData]);
 
   function UpdateTrackerData() {
-    if (!trackerData) return;
+    if (!stickersData) return;
 
     if (searchSticker.length > 0)
       return setSelectedData(
-        trackerData
+        stickersData
           .filter((data) => data.name.includes(searchSticker))
-          .sort((a, b) => (Number(a.id) > Number(b.id) ? 1 : -1))
+          .sort((a, b) =>
+            Number(isExternalAlbum ? a.name : a.id) >
+            Number(isExternalAlbum ? b.name : b.id)
+              ? 1
+              : -1
+          )
       );
 
     return setSelectedData(
-      trackerData.sort((a, b) => (Number(a.id) > Number(b.id) ? 1 : -1))
+      stickersData.sort((a, b) => (Number(a.id) > Number(b.id) ? 1 : -1))
     );
-  }
-  function UpdateExternalData() {
-    if (searchSticker.length > 0)
-      return setSelectedData(
-        albumExternalData.filter((data) => data.name.includes(searchSticker))
-      );
-
-    return setSelectedData(albumExternalData);
   }
 
   useEffect(() => {
-    isExternalAlbum ? UpdateExternalData() : UpdateTrackerData();
-  }, [searchSticker, trackerData, albumExternalData]);
+    UpdateTrackerData();
+  }, [searchSticker, stickersData]);
 
   return (
     <>
       <Stack w={"100%"} hiddenFrom="sm">
-        <Group h={"auto"} justify="space-evenly" pl={40}>
-          <Text> Total</Text>
-          <Text> Estampa</Text>
+        <Group h={"auto"} justify="space-between">
+          <Text w={"30%"} ta={"center"}>
+            Estampa
+          </Text>
+          <Text w={"30%"}>Obtenido</Text>
+          <Text w={"30%"}> Repetidos</Text>
         </Group>
         <CustomListRender data={selectedData} />
       </Stack>
       <Stack w={"50%"} visibleFrom="sm">
-        <Group h={"auto"} justify="space-evenly" pl={40}>
-          <Text> Total</Text>
-          <Text> Estampa</Text>
+        <Group h={"auto"} justify="space-evenly">
+          <Text w={"30%"} ta={"center"}>
+            Estampa
+          </Text>
+          <Text w={"30%"}> Obtenido</Text>
+          <Text w={"30%"}> Repetidos</Text>
         </Group>
         <CustomListRender data={halfLeftData} />
       </Stack>
       <Stack w={"50%"} visibleFrom="sm">
-        <Group h={"auto"} justify="space-evenly" pl={40}>
-          <Text> Total</Text>
-          <Text> Estampa</Text>
+        <Group h={"auto"} justify="space-evenly">
+          <Text w={"30%"} ta={"center"}>
+            Estampa
+          </Text>
+          <Text w={"30%"}> Obtenido</Text>
+          <Text w={"30%"}> Repetidos</Text>
         </Group>
         <CustomListRender data={halfRightData} />
       </Stack>
