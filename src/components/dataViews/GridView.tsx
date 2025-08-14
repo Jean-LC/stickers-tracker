@@ -15,13 +15,13 @@ const GridView = () => {
   );
 
   return (
-    <Grid w={"100%"} maw={500} m={20} align="center">
+    <Grid w={"100%"} maw={900} m={20} align="center">
       {isExternalAlbum ? (
         <>
           {albumExternalData
             .sort((a, b) => (Number(a.name) > Number(b.name) ? 1 : -1))
             .map((val) => (
-              <Grid.Col span={2} key={val.id}>
+              <Grid.Col span={{ base: 2, sm: 1 }} key={val.id}>
                 {val.count > 0 ? (
                   <Image
                     w={40}
@@ -43,7 +43,7 @@ const GridView = () => {
             trackerData
               .sort((a, b) => (Number(a.id) > Number(b.id) ? 1 : -1))
               .map((val) => (
-                <Grid.Col span={2} key={val.id}>
+                <Grid.Col span={{ base: 3, sm: 1 }} key={val.id}>
                   {val.count > 0 ? (
                     <Image
                       w={40}
